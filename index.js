@@ -31,6 +31,7 @@ async function run() {
         const orderedCollection = database.collection("Orders");
         const adminsCollection = database.collection("Admins");
         const reviewCollection = database.collection("Review");
+        const usersCollection = database.collection("users");
 
 
         app.get('/products', async (req, res) => {
@@ -38,6 +39,7 @@ async function run() {
             const products = await cursor.toArray();
             res.json(products);
         })
+
 
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
@@ -47,6 +49,18 @@ async function run() {
         })
 
 
+
+        //users database operation
+
+        // creating new users
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const newUser = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(newUser);
+        })
 
         // orders..............
         

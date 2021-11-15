@@ -62,6 +62,28 @@ async function run() {
             res.json(newUser);
         })
 
+
+        
+        // setting admin
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: true } };
+            const newAdmin = await usersCollection.updateOne(filter, updateDoc);
+            res.json(newAdmin);
+        })
+
+
+        //cheking admin
+        
+        app.get("/users/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            const isAdmin = user?.role ? true : false;
+            res.json(isAdmin);
+        });
+
         // orders..............
         
         app.get('/orders/all', async (req, res) => {
